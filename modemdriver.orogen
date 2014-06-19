@@ -5,8 +5,8 @@ import_types_from "canbus"
 
 task_context "Modem" do
     needs_configuration
-    input_port "data_in", "uint8_t"
-    output_port "data_out", "uint8_t"
+    input_port "data_in", "char"
+    output_port "data_out", "char"
     periodic 0.1
 end
 
