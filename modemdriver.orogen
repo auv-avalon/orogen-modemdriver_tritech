@@ -11,13 +11,13 @@ task_context "Modem" do
 end
 
 task_context "ModemSerial" do
-    subclass 'Modem' 
+    subclasses 'Modem' 
     property "serial_device", "/std/string"
     periodic 0.1
 end
 
 task_context "ModemCanbus" do 
-    subclass 'Modem' 
+    subclasses 'Modem' 
     input_port "can_in", "/canbus/Message"
     output_port "can_out", "/canbus/Message"
     periodic 0.1
