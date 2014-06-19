@@ -5,8 +5,8 @@ import_types_from "canbus"
 
 task_context "Modem" do
     needs_configuration
-    input_port "data_in", "char"
-    output_port "data_out", "char"
+    input_port "data_in", "std/vector<int>" 
+    output_port "data_out", "std/vector<int>"
     periodic 0.1
 end
 
