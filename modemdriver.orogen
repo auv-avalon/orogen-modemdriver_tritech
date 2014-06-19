@@ -1,0 +1,25 @@
+name "modemdriver"
+import_types_from "modemdriverTypes.hpp"
+using_task_library "canbus"
+import_types_from "canbus"
+
+task_context "Modem" do
+    needs_configuration
+    input_port "data_in", "uint8_t"
+    output_port "data_out", "uint8_t"
+    periodic 0.1
+end
+
+task_context "ModemSerial" do
+    subclass 'Modem' 
+    property "serial_device", "/std/string"
+    periodic 0.1
+end
+
+task_context "ModemCanbus" do 
+    subclass 'Modem' 
+    input_port "can_in", "/canbus/Message"
+    output_port "can_out", "/canbus/Message"
+    periodic 0.1
+end
+
