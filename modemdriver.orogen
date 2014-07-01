@@ -1,6 +1,7 @@
 name "modemdriver"
 import_types_from "modemdriverTypes.hpp"
 using_task_library "canbus"
+using_library "modemdriver_tritech"
 import_types_from "canbus"
 
 task_context "Modem" do
@@ -23,3 +24,8 @@ task_context "ModemCanbus" do
     periodic 0.1
 end
 
+deployment 'modemdriver_cantest' do
+#    task('can', "canbus::Task").
+#        periodic(0.1)
+    task('modemdriver', "ModemCanbus")
+end

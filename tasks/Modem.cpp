@@ -39,6 +39,12 @@ bool Modem::startHook()
 void Modem::updateHook()
 {
     ModemBase::updateHook();
+    std::vector<char> to_send;
+//    if (_data_in.read(to_send) == RTT::NewData){
+//        for (int i=0; i < to_send.size(); i++){
+//            //ack_driver send
+//        }
+//    }
 }
 void Modem::errorHook()
 {

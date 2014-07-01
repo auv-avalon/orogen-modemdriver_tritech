@@ -4,6 +4,7 @@
 #define MODEMDRIVER_MODEM_TASK_HPP
 
 #include "modemdriver/ModemBase.hpp"
+#include <modemdriver_tritech/AckDriver.hpp>
 
 namespace modemdriver {
 
@@ -29,6 +30,7 @@ namespace modemdriver {
 
 
     public:
+        modemdriver::AckDriver ack_driver;
         /** TaskContext constructor for Modem
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.

@@ -28,6 +28,9 @@ bool ModemSerial::configureHook()
 {
     if (! ModemSerialBase::configureHook())
         return false;
+    
+    driver.open(_serial_device.get());
+    ack_driver.setDriver(&driver);
     return true;
 }
 bool ModemSerial::startHook()

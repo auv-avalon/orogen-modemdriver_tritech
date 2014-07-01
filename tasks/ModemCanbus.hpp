@@ -4,6 +4,7 @@
 #define MODEMDRIVER_MODEMCANBUS_TASK_HPP
 
 #include "modemdriver/ModemCanbusBase.hpp"
+#include <modemdriver_tritech/DriverInterface.hpp>
 
 namespace modemdriver {
 
@@ -21,10 +22,14 @@ namespace modemdriver {
      \endverbatim
      *  It can be dynamically adapted when the deployment is called with a prefix argument. 
      */
-    class ModemCanbus : public ModemCanbusBase
+    class ModemCanbus : public ModemCanbusBase, public modemdriver::DriverInterface
     {
 	friend class ModemCanbusBase;
     protected:
+        base::Time last_process;
+        size_t send_last_second;
+        boost::circular_buffer<uint8_t>  send_data_buffer;
+        boost::circular_buffer<uint8_t>  receive_data_buffer;
 
 
 
@@ -103,6 +108,9 @@ namespace modemdriver {
          * before calling start() again.
          */
         void cleanupHook();
+        virtual size_t process();
+        virtual void writeSlowly(uint8_t const *buffer, size_t buffer_size);
+        virtual int getPacket(std::vector<uint8_t> &out);
     };
 }
 
