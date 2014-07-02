@@ -6,11 +6,11 @@
 
 using namespace modemdriver;
 #define MAX_CAN_SIZE 8
-#define MODEM_ID 0x505
+#define MODEM_ID 0x500
 #define BITRATE 40
 
 ModemCanbus::ModemCanbus(std::string const& name)
-    : ModemCanbusBase(name)//, send_data_buffer(500), receive_data_buffer(500)
+    : ModemCanbusBase(name), send_data_buffer(500), receive_data_buffer(500)
 {
 }
 
@@ -48,8 +48,14 @@ void ModemCanbus::updateHook()
     ModemCanbusBase::updateHook();
     canbus::Message msg;
     if (_can_in.read(msg) == RTT::NewData){
+        std::cout << "There is a Can Message!" << std::endl;
         for (int i=0; i < msg.size; i++){
+            std::cout << "push back" << std::endl;
             receive_data_buffer.push_back(msg.data[i]);
+            if (receive_data_buffer.empty())
+                std::cout << "nach dem push_back leer" << std::endl;
+            else
+                std::cout << "nach dem push back nicht leer" << std::endl;
         }
     }
     ack_driver.process();
@@ -84,6 +90,7 @@ size_t ModemCanbus::process(){
         } 
         if (size) {
             canbus::Message msg;
+            msg.time = base::Time::now();
             msg.size = size;
             msg.can_id = MODEM_ID;
             for (int i=0; i<size; i++){
@@ -102,17 +109,30 @@ void ModemCanbus::writeSlowly(uint8_t const *buffer, size_t buffer_size){
 }
 
 int ModemCanbus::getPacket(std::vector<uint8_t> &out){
-   int ret = 0;
-   while (ret < 0){
-       ret = 0;
-       if (receive_data_buffer.size()){
-           ret = modemdriver::Parser::extractPacket(&receive_data_buffer[0], receive_data_buffer.size(), out);
-       }
-       if (ret < 0){
-           for (int i = 0; i > ret; i--){
-               receive_data_buffer.pop_front();
-           } 
-       }
-   }
-   return ret; 
+    //std::cout << "getPacket is called" << std::endl;
+    int ret = 0;
+    do {
+        ret = 0;
+        if (!receive_data_buffer.empty()){
+            std::cout << "receive data buffer is not empty" << std::endl;
+            std::vector<uint8_t> in;
+            in.clear();
+            for (int i = 0; i < receive_data_buffer.size(); i++){
+                std::cout << "pushe in den vector: " << std::hex << (int)receive_data_buffer[i] << std::endl;
+                in.push_back(receive_data_buffer[i]);
+            }
+            ret = modemdriver::Parser::extractPacket(in,  out);
+            std::cout << "Paket geparsed return: " << ret << std::endl;
+        }
+        size_t to_skip;
+        if (ret < 0){
+            to_skip = ret * -1;
+        } else {
+            to_skip = ret;
+        }
+        for (int i = 0; i < to_skip; i++){
+            receive_data_buffer.pop_front();
+        } 
+    } while (ret < 0);
+    return ret; 
 }

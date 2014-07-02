@@ -33,7 +33,8 @@ task_context "ModemCanbus" do
 end
 
 deployment 'modemdriver_cantest' do
-#    task('can', "canbus::Task").
-#        periodic(0.1)
-    task('modemdriver', "ModemCanbus")
+    task('cantest', "canbus::Task").
+        periodic(0.1)
+    task('modemdriver', "ModemCanbus").
+        periodic(0.1)
 end
