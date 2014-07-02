@@ -5,6 +5,7 @@
 
 #include "modemdriver/ModemBase.hpp"
 #include <modemdriver_tritech/AckDriver.hpp>
+#include <base/Timeout.hpp>
 
 namespace modemdriver {
 
@@ -26,7 +27,8 @@ namespace modemdriver {
     {
 	friend class ModemBase;
     protected:
-
+        virtual bool setDistance_request_interval(double value);
+        base::Timeout distance_timeout;
 
 
     public:

@@ -1,6 +1,7 @@
 name "modemdriver"
 import_types_from "modemdriverTypes.hpp"
 using_task_library "canbus"
+import_types_from 'base'
 using_library "modemdriver_tritech"
 import_types_from "canbus"
 
@@ -8,6 +9,13 @@ task_context "Modem" do
     needs_configuration
     input_port "data_in", "std/vector<char>" 
     output_port "data_out", "std/vector<char>"
+
+    #Time to wait between requesting range-measurments
+    property("distance_request_interval","double", 0.0).dynamic
+
+    #todo check datatype, the distance to the surface-modem
+    output_port("distance","double")
+
     periodic 0.1
 end
 
