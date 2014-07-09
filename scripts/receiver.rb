@@ -12,6 +12,7 @@ Orocos::run 'modemdriver_cantest' do
     can.modem.connect_to modemdriver.can_in 
     modemdriver.can_out.connect_to can.in
     modemdriver.configure
+    #modemdriver.distance_request_interval = 4
     can.start
     modemdriver.start
     loop do

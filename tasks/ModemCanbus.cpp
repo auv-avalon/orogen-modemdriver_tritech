@@ -41,6 +41,8 @@ bool ModemCanbus::startHook()
 {
     if (! ModemCanbusBase::startHook())
         return false;
+
+    ack_driver.writePacket(0x33);
     return true;
 }
 void ModemCanbus::updateHook()
@@ -48,14 +50,10 @@ void ModemCanbus::updateHook()
     ModemCanbusBase::updateHook();
     canbus::Message msg;
     if (_can_in.read(msg) == RTT::NewData){
-        std::cout << "There is a Can Message!" << std::endl;
+        //std::cout << "There is a Can Message!" << std::endl;
         for (int i=0; i < msg.size; i++){
-            std::cout << "push back" << std::endl;
+            //std::cout << "push back" << std::endl;
             receive_data_buffer.push_back(msg.data[i]);
-            if (receive_data_buffer.empty())
-                std::cout << "nach dem push_back leer" << std::endl;
-            else
-                std::cout << "nach dem push back nicht leer" << std::endl;
         }
     }
     ack_driver.process();
@@ -81,6 +79,7 @@ size_t ModemCanbus::process(){
     uint8_t can_data[MAX_CAN_SIZE];
     //Can Packets if there is bandswith and data
     while (send_last_second < BITRATE && !send_data_buffer.empty()){
+        std::cout << "send buffer is not empty" << std::endl;
         size_t size = 0;
         //Fill Canpackets if there is space in the packet and data and bandswidth
         while (send_last_second < BITRATE && size < MAX_CAN_SIZE && !send_data_buffer.empty()){
@@ -114,15 +113,15 @@ int ModemCanbus::getPacket(std::vector<uint8_t> &out){
     do {
         ret = 0;
         if (!receive_data_buffer.empty()){
-            std::cout << "receive data buffer is not empty" << std::endl;
+           // std::cout << "receive data buffer is not empty" << std::endl;
             std::vector<uint8_t> in;
             in.clear();
             for (int i = 0; i < receive_data_buffer.size(); i++){
-                std::cout << "pushe in den vector: " << std::hex << (int)receive_data_buffer[i] << std::endl;
+                //std::cout << "pushe in den vector: " << std::hex << (int)receive_data_buffer[i] << std::endl;
                 in.push_back(receive_data_buffer[i]);
             }
             ret = modemdriver::Parser::extractPacket(in,  out);
-            std::cout << "Paket geparsed return: " << ret << std::endl;
+            //std::cout << "Paket geparsed return: " << ret << std::endl;
         }
         size_t to_skip;
         if (ret < 0){
@@ -134,5 +133,8 @@ int ModemCanbus::getPacket(std::vector<uint8_t> &out){
             receive_data_buffer.pop_front();
         } 
     } while (ret < 0);
+    if (ret) {
+        std::cout << "found a packet" << std::endl;
+    }
     return ret; 
 }
