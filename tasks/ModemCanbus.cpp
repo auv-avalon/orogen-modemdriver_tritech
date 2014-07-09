@@ -50,9 +50,7 @@ void ModemCanbus::updateHook()
     ModemCanbusBase::updateHook();
     canbus::Message msg;
     if (_can_in.read(msg) == RTT::NewData){
-        //std::cout << "There is a Can Message!" << std::endl;
         for (int i=0; i < msg.size; i++){
-            //std::cout << "push back" << std::endl;
             receive_data_buffer.push_back(msg.data[i]);
         }
     }
@@ -113,15 +111,13 @@ int ModemCanbus::getPacket(std::vector<uint8_t> &out){
     do {
         ret = 0;
         if (!receive_data_buffer.empty()){
-           // std::cout << "receive data buffer is not empty" << std::endl;
             std::vector<uint8_t> in;
             in.clear();
             for (int i = 0; i < receive_data_buffer.size(); i++){
-                //std::cout << "pushe in den vector: " << std::hex << (int)receive_data_buffer[i] << std::endl;
                 in.push_back(receive_data_buffer[i]);
             }
             ret = modemdriver::Parser::extractPacket(in,  out);
-            //std::cout << "Paket geparsed return: " << ret << std::endl;
+            std::cout << "Got a valid Packet!" << std::endl;
         }
         size_t to_skip;
         if (ret < 0){
