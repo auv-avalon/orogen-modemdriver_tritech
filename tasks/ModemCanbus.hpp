@@ -30,6 +30,7 @@ namespace modemdriver {
         size_t send_last_second;
         boost::circular_buffer<uint8_t>  send_data_buffer;
         boost::circular_buffer<uint8_t>  receive_data_buffer;
+        int count;
 
 
 

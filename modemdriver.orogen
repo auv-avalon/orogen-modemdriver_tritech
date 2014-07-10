@@ -1,5 +1,6 @@
 name "modemdriver"
 import_types_from "modemdriverTypes.hpp"
+import_types_from "modemdriver_tritech/AckDriverStats.hpp"
 using_task_library "canbus"
 import_types_from 'base'
 using_library "modemdriver_tritech"
@@ -29,6 +30,7 @@ task_context "ModemCanbus" do
     subclasses 'Modem' 
     input_port "can_in", "/canbus/Message"
     output_port "can_out", "/canbus/Message"
+    output_port "stats", "modemdriver/AckDriverStats"
     periodic 0.1
 end
 

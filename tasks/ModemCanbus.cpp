@@ -40,6 +40,7 @@ bool ModemCanbus::configureHook()
 }
 bool ModemCanbus::startHook()
 {
+    count = 0;
     if (! ModemCanbusBase::startHook())
         return false;
 
@@ -69,7 +70,9 @@ void ModemCanbus::updateHook()
             std::cout << "Retry:" <<(int) s.retries << std::endl; 
             std::cout << "Rejected Packets:" <<(int) s.rejected_packets << std::endl; 
 
+            count = 0;
     }
+    count++;
 
 }
 void ModemCanbus::errorHook()
