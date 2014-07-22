@@ -5,6 +5,7 @@ using_task_library "canbus"
 import_types_from 'base'
 using_library "modemdriver_tritech"
 import_types_from "canbus"
+import_types_from "sysmon"
 
 task_context "Modem" do
     needs_configuration
@@ -16,6 +17,7 @@ task_context "Modem" do
 
     #todo check datatype, the distance to the surface-modem
     output_port("distance","double")
+    output_port("out_modem_substates", "sysmon/ModemSubstate")
 
     periodic 0.1
 end

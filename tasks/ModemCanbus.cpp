@@ -3,6 +3,7 @@
 #include "ModemCanbus.hpp"
 #include <modemdriver_tritech/ModemParser.hpp>
 #include <modemdriver_tritech/AckDriverStats.hpp>
+#include <sysmon/SysMonTypes.hpp>
 
 
 using namespace modemdriver;
@@ -73,6 +74,15 @@ void ModemCanbus::updateHook()
             count = 0;
     }
     count++;
+    if (ack_driver.hasReceivedData()){
+        uint8_t data = ack_driver.getNextReceivedData();
+        if (data < 32){
+            sysmon::ModemSubstate substate;
+            substate.time = base::Time::now();
+            substate.substate = data;
+            _out_modem_substates.write(substate);
+        }
+    }
 
 }
 void ModemCanbus::errorHook()
