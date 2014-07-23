@@ -1,9 +1,14 @@
 name "modemdriver"
+
 using_library "modemdriver_tritech"
 using_task_library "canbus"
+
+import_types_from "modemdriverTypes.hpp"
+import_types_from "modemdriver_tritech/AckDriverStats.hpp"
 import_types_from "modemdriverTypes.hpp"
 import_types_from 'base'
 import_types_from "canbus"
+import_types_from "sysmon"
 
 task_context "Modem" do
     needs_configuration
@@ -15,6 +20,7 @@ task_context "Modem" do
 
     #todo check datatype, the distance to the surface-modem
     output_port("distance","double")
+    output_port("out_modem_substates", "sysmon/ModemSubstate")
 
     periodic 0.1
 end
@@ -29,11 +35,13 @@ task_context "ModemCanbus" do
     subclasses 'Modem' 
     input_port "can_in", "/canbus/Message"
     output_port "can_out", "/canbus/Message"
+    output_port "stats", "modemdriver/AckDriverStats"
     periodic 0.1
 end
 
 deployment 'modemdriver_cantest' do
-#    task('can', "canbus::Task").
-#        periodic(0.1)
-    task('modemdriver', "ModemCanbus")
+    task('cantest', "canbus::Task").
+        periodic(0.1)
+    task('modemdriver', "ModemCanbus").
+        periodic(0.1)
 end
