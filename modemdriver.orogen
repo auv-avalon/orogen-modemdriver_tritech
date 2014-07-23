@@ -1,8 +1,8 @@
 name "modemdriver"
-import_types_from "modemdriverTypes.hpp"
-using_task_library "canbus"
-import_types_from 'base'
 using_library "modemdriver_tritech"
+using_task_library "canbus"
+import_types_from "modemdriverTypes.hpp"
+import_types_from 'base'
 import_types_from "canbus"
 
 task_context "Modem" do
