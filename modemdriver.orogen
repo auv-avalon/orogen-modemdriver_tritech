@@ -2,6 +2,7 @@ name "modemdriver"
 
 using_library "modemdriver_tritech"
 using_task_library "canbus"
+using_task_library 'sysmon'
 
 import_types_from "modemdriverTypes.hpp"
 import_types_from "modemdriver_tritech/AckDriverStats.hpp"

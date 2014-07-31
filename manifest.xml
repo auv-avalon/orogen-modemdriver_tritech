@@ -17,4 +17,5 @@
   <depend package="drivers/canbus" />
   <depend package="drivers/orogen/canbus" />
   <depend package="auv_avalon/modemdriver_tritech" />
+  <depend package="avalon/orogen/sysmon" />
 </package>
