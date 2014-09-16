@@ -4,17 +4,16 @@ using_library "modemdriver_tritech"
 using_task_library "canbus"
 using_task_library 'sysmon'
 
-import_types_from "modemdriverTypes.hpp"
 import_types_from "modemdriver_tritech/AckDriverStats.hpp"
-import_types_from "modemdriverTypes.hpp"
+import_types_from "modemdriverTypes_.hpp"
 import_types_from 'base'
 import_types_from "canbus"
 import_types_from "sysmon"
 
 task_context "Modem" do
     needs_configuration
-    input_port "data_in", "std/vector<char>" 
-    output_port "data_out", "std/vector<char>"
+    input_port "data_in", "modemdriver/modem_message" 
+    output_port "data_out", "modemdriver/modem_message"
 
     #Time to wait between requesting range-measurments
     property("distance_request_interval","double", 0.0).dynamic

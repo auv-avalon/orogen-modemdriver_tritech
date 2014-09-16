@@ -1,16 +1,17 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.cpp */
 
 #include "Modem.hpp"
+#include <vector>
 
 using namespace modemdriver;
 
 Modem::Modem(std::string const& name)
-    : ModemBase(name)
+    : ModemBase(name), current_message(10)
 {
 }
 
 Modem::Modem(std::string const& name, RTT::ExecutionEngine* engine)
-    : ModemBase(name, engine)
+    : ModemBase(name, engine), current_message(10)
 {
 }
 
@@ -45,17 +46,27 @@ bool Modem::startHook()
 void Modem::updateHook()
 {
     ModemBase::updateHook();
-    std::vector<char> to_send;
     if(distance_timeout.elapsed())
     {
         distance_timeout.restart();
         ack_driver.requestRange(); 
+    }    
+    //If the ack driver has nothing to send
+    if (!ack_driver.isSending()){
+        //If the whole current message is send
+        if (current_message.empty()){
+            modemdriver::modem_message to_send;
+            if (_data_in.readNewest(to_send) == RTT::NewData){
+                for (int i=0; i < to_send.message.size(); i++){
+                    current_message.push_back(to_send.message.c_str()[i]);
+                }
+            }
+        //If there is something to send of the current_message
+        } else {
+            ack_driver.writePacket(current_message[0]);
+            current_message.pop_front();
+        }
     }
-//    if (_data_in.read(to_send) == RTT::NewData){
-//        for (int i=0; i < to_send.size(); i++){
-//            //ack_driver send
-//        }
-//    }
 }
 void Modem::errorHook()
 {

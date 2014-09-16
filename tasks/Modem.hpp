@@ -29,6 +29,7 @@ namespace modemdriver {
     protected:
         virtual bool setDistance_request_interval(double value);
         base::Timeout distance_timeout;
+        boost::circular_buffer<uint8_t> current_message;
 
 
     public:

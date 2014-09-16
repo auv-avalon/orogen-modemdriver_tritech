@@ -76,12 +76,20 @@ void ModemCanbus::updateHook()
     count++;
     if (ack_driver.hasReceivedData()){
         uint8_t data = ack_driver.getNextReceivedData();
-        if (data < 32){
+        std::vector<char> message (1);
+        message[0] = data;
+        std::string message_str(message.begin(), message.end());
+        modemdriver::modem_message m_message;
+        m_message.message = message_str;
+        m_message.time = base::Time::now();
+        _data_out.write(m_message);
+        
+        /*if (data < 32){
             sysmon::ModemSubstate substate;
             substate.time = base::Time::now();
             substate.substate = data;
             _out_modem_substates.write(substate);
-        }
+        }*/
     }
 
 }
