@@ -45,7 +45,6 @@ bool ModemCanbus::startHook()
     if (! ModemCanbusBase::startHook())
         return false;
 
-    ack_driver.writePacket(0x33);
     return true;
 }
 void ModemCanbus::updateHook()
